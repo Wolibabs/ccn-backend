@@ -1,6 +1,6 @@
 # Grazac CNN Backend
 
-This is the backend for CCN new platform, built with Node.js Express and MongoDB
+This is the backend for CNN new platform, built with Node.js Express and MongoDB
 
 1. Create .env and set MONGO_URI and JWT_SECRET.
 2. Run `npm install` then `npm run dev`.
@@ -21,4 +21,4 @@ Available at your primary URL https://ccn-backend.onrender.com
 
 ## API Documentation
 click here for full API documentation:
-https://adefisanbabatunde-4609729.postman.co/workspace/6a678959-ccf1-42ac-8d3a-ad2cd01b2af5/collection/47623253-0c416564-82be-430b-ac47-4b5e3b08ac9a?action=share&source=copy-link&creator=47623253
+https://documenter.getpostman.com/view/47623253/2sB3QDvYbz

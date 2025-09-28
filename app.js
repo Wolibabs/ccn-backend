@@ -15,6 +15,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+    res.json({ message: "Credit-line News Network the largest sysndicate of breaking news worldwide." });
+});
+
+
 app.use('/api/admin', adminRoutes);
 app.use('/api/auth', adminRoutes);
 app.use('/api', userRoutes);
