@@ -4,7 +4,7 @@ const User = require('../models/user.models');
 const News = require('../models/news.models');
 
 //Signup: create chief editor account
-exports.signup = async (req, res, next) => {
+exports.signup = async (req, res) => {
 try {
 const { firstName, lastName, email, password, role } = req.body;
 if (!firstName || !lastName || !email || !password) {
@@ -17,16 +17,23 @@ if (existing) return res.status(409).json({ message: 'User already exists' });
 const salt = await bcrypt.genSalt(10);
 const hashedPassword = await bcrypt.hash(password, salt);
 
-const user = await User.create({ firstName, lastName, email, password: hashedPassword, role: role || 'editor' });
+const user = await User.create({
+      firstName, 
+      lastName, 
+      email, 
+      password: hashedPassword, 
+      role: role || 'editor',
+      });
 
 return res.status(201).json({ message: 'Editor account created', user: { id: user._id, email: user.email, role: user.role } });
 } catch (err) {
-next(err);
+console.error( "Signup error:", err.message);
+res.status(500).json({ message: "Server error"});
 }
 };
 
 // Login
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
 try {
 const { email, password } = req.body;
 if (!email || !password) return res.status(400).json({ message: 'Input your email and password' });
@@ -44,13 +51,14 @@ const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env
 
 res.json({ token, user: { id: user._id, email: user.email, role: user.role } });
 } catch (err) {
-next(err);
+console.error("Login error:", err.message);
+res.status(500).json({ message: "Server error"});
 }
 };
 
 
 // Create News
-exports.createNews = async (req, res, next) => {
+exports.createNews = async (req, res) => {
 try {
 const { title, body } = req.body;
 if (!title || !body) return res.status(400).json({ message: 'Title and body are required' });
@@ -59,13 +67,14 @@ if (!title || !body) return res.status(400).json({ message: 'Title and body are 
 const news = await News.create({ title, body, author: req.user.id });
 res.status(201).json({ message: 'News posted', news });
 } catch (err) {
-next(err);
+console.error("Create news error:", err.message);
+res.status(500).json({ message: "Server error"});
 }
 };
 
 
 // Edit News
-exports.editNews = async (req, res, next) => {
+exports.editNews = async (req, res) => {
 try {
 const { id } = req.params;
 const { title, body } = req.body;
@@ -83,13 +92,14 @@ await news.save();
 
 res.json({ message: 'News updated', news });
 } catch (err) {
-next(err);
+console.error("Edit news error:", err.message);
+res.status(500).json({ message: "Server error"});
 }
 };
 
 
 // Delete News
-exports.deleteNews = async (req, res, next) => {
+exports.deleteNews = async (req, res) => {
 try {
 const { id } = req.params;
 const news = await News.findByIdAndDelete(id);
@@ -100,6 +110,7 @@ if (!news) {
 
 res.json({ message: "News deleted successfully"});
 } catch (err) {
-next(err);
+console.error("Delete news error:", err.message);
+res.status(500).json({ message: "Server error"});
 }
 };
