@@ -4,7 +4,7 @@ const User = require('../models/user.models');
 const News = require('../models/news.models');
 
 //Signup: create chief editor account
-exports.signup = async (req, res) => {
+const signup = async (req, res) => {
 try {
 const { firstName, lastName, email, password, role } = req.body;
 if (!firstName || !lastName || !email || !password) {
@@ -33,7 +33,7 @@ res.status(500).json({ message: "Server error"});
 };
 
 // Login
-exports.login = async (req, res) => {
+const login = async (req, res) => {
 try {
 const { email, password } = req.body;
 if (!email || !password) return res.status(400).json({ message: 'Input your email and password' });
@@ -58,7 +58,7 @@ res.status(500).json({ message: "Server error"});
 
 
 // Create News
-exports.createNews = async (req, res) => {
+const createNews = async (req, res) => {
 try {
 const { title, body } = req.body;
 if (!title || !body) return res.status(400).json({ message: 'Title and body are required' });
@@ -74,7 +74,7 @@ res.status(500).json({ message: "Server error"});
 
 
 // Edit News
-exports.editNews = async (req, res) => {
+const editNews = async (req, res) => {
 try {
 const { id } = req.params;
 const { title, body } = req.body;
@@ -99,7 +99,7 @@ res.status(500).json({ message: "Server error"});
 
 
 // Delete News
-exports.deleteNews = async (req, res) => {
+const deleteNews = async (req, res) => {
 try {
 const { id } = req.params;
 const news = await News.findByIdAndDelete(id);
@@ -113,4 +113,13 @@ res.json({ message: "News deleted successfully"});
 console.error("Delete news error:", err.message);
 res.status(500).json({ message: "Server error"});
 }
+};
+
+
+module.exports = {
+  signup,
+  login,
+  createNews,
+  editNews,
+  deleteNews,
 };

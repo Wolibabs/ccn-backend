@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user.models');
 
 
-exports.authenticate = async (req, res, next) => {
+const authenticate = async (req, res, next) => {
 try {
 let token = null;
 if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -15,19 +15,28 @@ const decoded = jwt.verify(token, process.env.JWT_SECRET);
 const user = await User.findById(decoded.id);
 if (!user) return res.status(401).json({ message: 'No user found' });
 
-
-// attach to req
 req.user = { id: user._id, role: user.role };
 next();
 } catch (err) {
-return res.status(401).json({ message: 'Not authorized, token failed' });
+    if (err.name === 'TokenExpiredError') {
+        return res.status(401).json({message: 'Token expired, please login again'});
+    }
+    if (err.name === 'JsonWebTokenError') {
+        return res.status(401).json({message: 'Invalid token, please login again'});
+    }
+return res.status(401).json({ message: 'Not authorized' });
 }
 };
 
 
-exports.authorize = (...roles) => {
+const authorize = (...roles) => {
 return (req, res, next) => {
-if (!roles.includes(req.user.role)) return res.status(403).json({ message: 'Forbidden: insufficient rights' });
+if (!roles.includes(req.user.role)) return res.status(403).json({ message: 'Unauthorized access' });
 next();
 };
+};
+
+module.exports = {
+  authenticate,
+  authorize
 };

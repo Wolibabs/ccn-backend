@@ -21,8 +21,8 @@ publishedAt: {
      },
 }, {
      timestamps: true,
-     versionkey: false
+     versionKey: false
     });
 
-
-module.exports = mongoose.model('News', newsSchema);
+    const News = mongoose.model('News', newsSchema);    
+    module.exports = News;

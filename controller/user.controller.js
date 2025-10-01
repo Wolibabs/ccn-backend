@@ -9,7 +9,7 @@ return jwt.sign({ id}, process.env.JWT_SECRET, { expiresIn: '12d' });
 };
 
 //user signup
-exports.signup = async (req, res) => {
+const signup = async (req, res) => {
 try {
 const { firstName, lastName, email, password } = req.body;
 
@@ -35,7 +35,7 @@ res.status(500).json({ message: "Server error" });
 };
 
 //user login
-exports.login = async (req, res) => {
+const login = async (req, res) => {
 try {
 const { email, password } = req.body;   
 
@@ -52,7 +52,7 @@ res.status(500).json({ message: "Server error" });
 };
 
 // Read all news (public)
-exports.getAllNews = async (req, res,) => {
+const getAllNews = async (req, res,) => {
 try {
 const news = await News.find().populate('author', 'firstName lastName email').sort({ createdAt: -1 });
 res.json({ count: news.length, news });
@@ -64,7 +64,7 @@ res.status(500).json({ message: "Server error"});
 
 
 // Read single news
-exports.getNewsById = async (req, res,) => {
+const getNewsById = async (req, res,) => {
 try {
 const { id } = req.params;
 const news = await News.findById(id).populate('author', 'firstName lastName email');
@@ -74,4 +74,12 @@ res.json({ news });
 console.error("Get news by ID error:", err.message);
 res.status(500).json({ message: "Server error"});
 }
+};
+
+//
+module.exports = {
+  signup,
+  login,
+  getAllNews,
+  getNewsById
 };
